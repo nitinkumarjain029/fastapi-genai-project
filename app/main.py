@@ -1,6 +1,5 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import Optional
+from fastapi import FastAPI, HTTPException, status, Depends
+from app.routers.users import router as users_router
  
 
 app = FastAPI(
@@ -9,18 +8,8 @@ app = FastAPI(
     version = "1.0.0"
 )
 
-class User(BaseModel):
-    name: str
-    email:str
-    age: int
-    phoneNo: Optional[str] = None
 
-@app.post("/user")
-def create_user(user: User):
-    return {
-        "message": "User Create Successfully REE",
-        "user": user
-    }   
+app.include_router(users_router)
 
 @app.get("/")
 def home():
@@ -34,21 +23,18 @@ def hello():
         "message": "hello not radhe radhe"
     }
 
-@app.get("/users/{user_id}")
-def get_user(user_id : int):
+
+def get_role_user():
+    role = "Admin"
+    return role
+
+@app.get("/roles")
+def get_role(role = Depends(get_role_user)): 
+    if role != "Admin":
+        raise HTTPException(
+            status_code = 403,
+            detail = "ADMIN Access Denied"
+        )
     return {
-        "user_id": user_id
+        "message": "Welcome Admin"
     }
-
-@app.get("/search")
-def search_user(name : str):
-    return {
-        "seraching for": name
-    }
-
-@app.post("/users")
-def create_users():
-    return {
-        "messge":  "User created successfully"
-    }   
-
