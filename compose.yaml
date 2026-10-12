@@ -1,0 +1,17 @@
+
+
+services:
+  api:
+    build: .
+    container_name: fastapi-genai-api
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      SECRET_KEY: ${SECRET_KEY}
+    volumes:
+      - fastapi-db-data:/data
+
+volumes:
+  fastapi-db-data:
+    external: true
