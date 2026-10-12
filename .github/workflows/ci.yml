@@ -41,3 +41,29 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t fastapi-genai-project-api:ci .
+
+      - name: Run Docker container
+        run: |
+          docker run -d \
+            --name fastapi-ci-container \
+            -p 8000:8000 \
+            -e SECRET_KEY=ci-test-secret-key-for-testing-only \
+            -e DATABASE_URL=sqlite:////tmp/users.db \
+            fastapi-genai-project-api:ci
+
+      - name: Check API health
+        run: |
+          for i in {1..15}; do
+            if curl --fail http://localhost:8000/health; then
+              echo "API health check passed!"
+              exit 0
+            fi
+            echo "Waiting for API to start..."
+            sleep 2
+          done
+          docker logs fastapi-ci-container
+          exit 1
+
+      - name: Stop Docker container
+        if: always()
+        run: docker rm -f fastapi-ci-container || true
