@@ -1,4 +1,4 @@
-from fastapi.testclient import TestClient
+﻿from fastapi.testclient import TestClient
 from app.main import app
 from app.core.security import create_access_token
 from app.db.models import User
@@ -43,7 +43,7 @@ def test_create_user_invalid_age(client):
         }
     )
 
-    assert response.status_code == 422    
+    assert response.status_code == 422
 
 
 
@@ -74,14 +74,14 @@ def test_get_user(client):
     data = response.json()
     assert data["id"] == user_id
     assert data["name"] == "Get User Test"
-    assert data["email"] == "getuser@example.com"   
+    assert data["email"] == "getuser@example.com"
 
 def get_fake_users(client):
-    response = client.get("/users"/9999)
+    response = client.get("/users/9999")
 
-    assert response.status_code == 400    
+    assert response.status_code == 400
 
-    
+
 def test_get_missing_user(client):
     response = client.get("/users/9999")
 
@@ -177,10 +177,10 @@ def test_patch_update_user(client):
     data = response.json()
     assert data["age"] == 31
     assert data["name"] == "Patch User"
-    assert data["email"] == "patchtest@example.com"    
+    assert data["email"] == "patchtest@example.com"
 
 
-    
+
 def test_delete_user_without_token(client):
     response = client.delete("/users/1")
     assert response.status_code == 401
@@ -231,7 +231,7 @@ def test_delete_user_as_admin(client, db_session):
         headers={"Authorization": f"Bearer {token}"},
     )
 
-    assert response.status_code == 204    
+    assert response.status_code == 204
 
 
 
@@ -306,7 +306,7 @@ def test_login_nonexistent_email(client):
 
 
 
-    
+
 def test_refresh_token_success(client):
     # User create karo
     create_response = client.post(
@@ -391,7 +391,7 @@ def test_refresh_token_revoked(client):
         json={"refresh_token": refresh_token}
     )
 
-    assert response.status_code == 401   
+    assert response.status_code == 401
 
 
 def test_get_me_invalid_token(client):
@@ -413,7 +413,7 @@ def test_get_me_user_not_found(client):
         headers={"Authorization": f"Bearer {token}"}
     )
 
-    assert response.status_code == 401        
+    assert response.status_code == 401
 
 
 def test_normal_user_cannot_delete_user(client):
@@ -450,6 +450,3 @@ def test_get_me_invalid_user_id_in_token(client):
     )
 
     assert response.status_code == 401
-
-
-  

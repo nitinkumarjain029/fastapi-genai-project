@@ -1,4 +1,27 @@
+
 venv/
+.venv/
 __pycache__/
-*.pyc
+*.py[cod]
+
 .env
+.env.*
+!.env.example
+
+.git/
+
+# Local database
+users.db
+*.db
+
+# Test and coverage files
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE / OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+uploads/
